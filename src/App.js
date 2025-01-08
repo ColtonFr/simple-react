@@ -1,3 +1,5 @@
+import React from 'react';
+
 class App extends React.Component {
   render() {
     return (
@@ -49,6 +51,9 @@ class InputTextComponent extends React.Component {
       text: "",
       submittedText: ""
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -67,9 +72,10 @@ class InputTextComponent extends React.Component {
           <input type = "text" onChange = {this.handleChange}/>
           <button type = "submit">Submit</button>
         </form>
-        <h1>{this.state.text}</h1>
+        <h1>{this.state.submittedText}</h1>
       </div>
     )
   }
 }
 
+export default App;
