@@ -49,7 +49,8 @@ class InputTextComponent extends React.Component {
 
     this.state = {
       text: "",
-      submittedText: ""
+      submittedText: "",
+      returnedText: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -60,9 +61,20 @@ class InputTextComponent extends React.Component {
     this.setState({text: event.target.value});
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
     this.setState({submittedText: this.state.text});
+    const response = await fetch("https://207a78dn77.execute-api.us-west-2.amazonaws.com/default/addToText", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({text: this.state.text})
+    });
+
+    const responseBody = JSON.parse(await response.text());
+    this.setState({returnedText: responseBody.text});
+
   }
 
   render() {
@@ -72,7 +84,7 @@ class InputTextComponent extends React.Component {
           <input type = "text" onChange = {this.handleChange}/>
           <button type = "submit">Submit</button>
         </form>
-        <h1>{this.state.submittedText}</h1>
+        <h1>{this.state.returnedText}</h1>
       </div>
     )
   }
