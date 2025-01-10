@@ -63,17 +63,29 @@ class InputTextComponent extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({submittedText: this.state.text});
-    const response = await fetch("https://207a78dn77.execute-api.us-west-2.amazonaws.com/default/addToText", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({text: this.state.text})
-    });
+    console.log("Form submitted"); // Debugging log
 
-    const responseBody = JSON.parse(await response.text());
-    this.setState({returnedText: responseBody.text});
+    try {
+      const response = await fetch("https://207a78dn77.execute-api.us-west-2.amazonaws.com/default/addToText", {
+        method: "POST",
+        credentials: "include", // Include cookies in the request
+        headers: {
+          "Accept": "application/json", // Expect a JSON response
+        },
+        body: JSON.stringify({text: this.state.text}),
+      });
+   
+      console.log("Response received"); // Debugging log
+
+      if (response.ok) {
+        const data = await response.json();
+        this.setState({returnedText: data.message});
+      } else {
+        console.error(`Error: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
 
   }
 
